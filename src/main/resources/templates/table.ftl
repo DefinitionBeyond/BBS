@@ -12,13 +12,12 @@
 						<a class="close" data-dismiss="alert">×</a>
 						<strong>操作信息:
 
-						
 							欢迎
-						
+						<#if user??>
+						${user.username}
+						<#else >
                             游客
-						
-
-
+						</#if>
 
 						</strong>
 						
@@ -67,8 +66,8 @@
 										
 										title="" class="cbox_single thumbnail">
 
-											<img src="user?action=pic&id="
-											alt="" style="height: 50px; width: 50px" />
+                                        <img src=""
+                                             alt="" style="height: 50px; width: 50px" />
 
 									</a>
 									

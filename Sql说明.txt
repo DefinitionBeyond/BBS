@@ -1,0 +1,17 @@
+
+
+table user:
+    1,userid  主键
+    2,username
+    3,password
+    4,pic 头像图片
+    5,pagenum 每页显示多少行 default 5
+    6, pic_path 头像路径
+
+table article:
+    1,id  主键
+    2,rootid 主帖id
+    3,title  标题
+    4,content 内容
+    5,userid  发帖人  外键
+    6,datetime  发帖时间

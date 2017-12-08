@@ -116,8 +116,14 @@
                         <li class="divider-vertical hidden-phone hidden-tablet"></li>
                         <li class="dropdown"><a href="#" class="dropdown-toggle"
                                                 data-toggle="dropdown">
+
+                        <#if user??>
+                            <img src="user?action=pic&id=${user.userid}" class="user_avatar"/>
+                        ${user.username}
+                        <#else >
                             <img src="img/user_avatar.png" alt="请登录" class="user_avatar" />
                             游客
+                        </#if>
 
                             <b class="caret"></b></a>
                             <ul class="dropdown-menu">
@@ -135,16 +141,16 @@
 
 
 
-                                <li><a href="#post" title="灌水" data-toggle="modal"
-                                       id="myp" data-backdrop="static"
-                                       onclick="javascript:addz();document.getElementById('submenu').innerHTML='灌水'">灌水</a>
+                            <#--<li><a href="#post" title="灌水" data-toggle="modal"-->
+                            <#--id="myp" data-backdrop="static"-->
+                            <#--onclick="javascript:addz();document.getElementById('submenu').innerHTML='灌水'">灌水</a>-->
 
 
 
-                                </li>
+                            <#--</li>-->
 
                                 <li class="divider"></li>
-                                <li><a href="loginout.jsp"
+                                <li><a href="user?action=logout"
                                        onclick="javascript:document.getElementById('submenu').innerHTML=''">退出当前用户</a></li>
                             </ul></li>
                     </ul>
@@ -330,18 +336,35 @@
     });
 
     function login() {
-        if (document.all.username.value == '') {
+        if ($("#username").val() == '') {
 
             document.getElementById("sticky_a1").click();
             return;
         }
-        if (document.all.password.value == '') {
+        if ($("#password").val() == '') {
 
             document.getElementById("sticky_a2").click();
             return;
         }
 
-        document.all.login_form.submit();
+        $.ajax({
+            data: $("#login_form").serialize(),
+            url: "user",
+            dataType: "text",
+            type: "post",
+            statusCode: {
+                200: function (data) {
+                    if (data.indexOf("true") != -1) {//代表已经登录成功
+                        window.location = "index";
+                    } else {
+                        alert('登录失败！');
+                    }
+                }
+            }
+
+        });
+
+//        document.all.login_form.submit();
 
     }
     //删除从贴
