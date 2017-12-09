@@ -29,8 +29,6 @@
 							行数 <span class="caret"></span>
 						</button>
 						<ul class="dropdown-menu">
-
-
                             <li><a href="user?action=ur&pagenum=5">默认5行</a></li>
                             <li><a href="user?action=ur&pagenum=10">每页10行</a></li>
                             <li><a href="user?action=ur&pagenum=2">每页2行</a></li>
@@ -103,7 +101,7 @@
 										<#if user??>
 											<#if user.userid==d.user.userid>
 											<a
-                                                    href="article?action=del&id=${d.id}"
+                                                    href="article?action=delz&id=${d.id}"
                                                     title="删除本帖"><i class="icon-trash"></i></a>
 											</#if>
 										</#if>

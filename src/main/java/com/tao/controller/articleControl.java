@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebInitParam;
@@ -51,15 +52,34 @@ public class articleControl extends HttpServlet {
         String action = req.getParameter("action");
         Map map1 = new HashMap();
         switch (action) {
-            case "queryall":
+            case "queryall": //查询所有已经发布的帖子
                 PageBean pb = queryAll(req, resp);
                 map1.put("pb", pb);
+                break;
+            case "delz": //删除主贴
+                delTZ(req, resp);
                 break;
 
         }
 
         map1.put("user", req.getSession().getAttribute("user"));//put user 的session信息
         freemarkUtil.forward(map.get("success").toString(), map1, resp);//将session在页面中传递，保证用户的权限
+    }
+
+    private void delTZ(HttpServletRequest req, HttpServletResponse resp) {
+        String id = req.getParameter("id");
+
+        service.deleteZT(Integer.parseInt(id));
+
+        RequestDispatcher dispatcher = null;
+        dispatcher = req.getRequestDispatcher("index");
+        try {
+            dispatcher.forward(req, resp);
+        } catch (ServletException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private PageBean queryAll(HttpServletRequest req, HttpServletResponse resp) {

@@ -111,4 +111,7 @@ public class userServiceImpl {
     }
 
 
+    public int updatePageNumById(User1 user) {
+        return dao.updatePageNumById(user);
+    }
 }

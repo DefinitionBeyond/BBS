@@ -24,4 +24,8 @@ public class articleServiceImpl {
     public Page<Article> findAll(Pageable pageable, int num) {
         return dao.findAll(pageable, num);
     }
+
+    public int deleteZT(Integer id) {
+        return dao.deleteZT(id);
+    }
 }
