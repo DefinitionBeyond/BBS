@@ -49,19 +49,38 @@ public class userControl extends HttpServlet {
 
             String action = req.getParameter("action");
             switch (action) {
-                case "login":
+                case "login": //登录
                     login(req, resp);
                     break;
 //            case "reg":
 //                reg(req,resp);
 //                break;
-                case "logout":
+                case "logout": //注销
                     logout(req, resp);
                     break;
-                case "pic":
+                case "pic": //解析图片
                     pic(req, resp);
                     break;
+                case "ur": //用户设置当前页面，最多显示的数据条数
+                    ur(req, resp);
+                    break;
             }
+        }
+    }
+
+    private void ur(HttpServletRequest req, HttpServletResponse resp) {
+        String pageNum = req.getParameter("pagenum");
+        User1 user = (User1) req.getSession().getAttribute("user");
+        user.setPagenum(Integer.parseInt(pageNum));
+        System.out.println(service.updatePageNumById(user));
+        RequestDispatcher dispatcher = null;
+        dispatcher = req.getRequestDispatcher("index");
+        try {
+            dispatcher.forward(req, resp);
+        } catch (ServletException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
