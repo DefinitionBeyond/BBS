@@ -31,9 +31,9 @@
 						<ul class="dropdown-menu">
 
 
-							<li><a href="">默认5行</a></li>
-							<li><a href="">每页10行</a></li>
-							<li><a href="">每页2行</a></li>
+                            <li><a href="user?action=ur&pagenum=5">默认5行</a></li>
+                            <li><a href="user?action=ur&pagenum=10">每页10行</a></li>
+                            <li><a href="user?action=ur&pagenum=2">每页2行</a></li>
 						</ul>
 					</div>
 					
@@ -56,32 +56,24 @@
 						</tr>
 					</thead>
 					<tbody>
-						
-                    	
-						
+
+
+					<#if pb??>
+						<#list pb.data as d>
 								<tr>
 
-									<td></td>
-									<td><a href="/upload/.jpg"
-										
+                                    <td>${d_index+1}</td>
+                                    <td>
+                                        <a href="/upload/.jpg"
 										title="" class="cbox_single thumbnail">
-
-                                        <img src=""
-                                             alt="" style="height: 50px; width: 50px" />
-
+                                            <img src="user?action=pic&id=#{d.user.userid}"
+                                                 alt="" style="height: 50px; width: 50px" />
 									</a>
-									
-									
-									
 									</td>
-									<td>
-									
-									
-									<a
-										href=""></a>
-									</td>
-									<td></td>
-									<td></td>
+
+                                    <td>${d.title}</td>
+                                    <td>${d.content}</td>
+                                    <td>${d.datatime}</td>
 									<td>
 											
 										<!-- 没登陆，游客 uid=0 -->
@@ -104,32 +96,27 @@
 											
 										
 											<!-- 是本人贴可以删除和修改 -->
-										
-
+										<#assign uid = -1 />
+										<#if user??>
+											<#assign uid = d.user.userid/>
+										</#if>
+										<#if user??>
+											<#if user.userid==d.user.userid>
 											<a
-												href="article?action=del&id="
-												title="删除本帖"><i class="icon-trash"></i></a>
-
-										
-										
-										
-										
+                                                    href="article?action=del&id=${d.id}"
+                                                    title="删除本帖"><i class="icon-trash"></i></a>
+											</#if>
+										</#if>
 									</td>
-										
 								</tr>
-
+						</#list>
+					</#if>
 					</tbody>
 				</table>
-
-
-
 			</div>
 		</div>
-		
-			<#include "page.ftl">
-		
+
+		<#include "page.ftl">
 
 	</div>
-
-
 </div>

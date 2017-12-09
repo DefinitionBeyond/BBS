@@ -17,6 +17,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+/**
+ * 用户控制器
+ * 控制登录，注册，注销等操作
+ */
 @WebServlet(name = "userControl", urlPatterns = {"/user"})
 public class userControl extends HttpServlet {
 

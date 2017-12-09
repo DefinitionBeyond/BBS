@@ -10,7 +10,7 @@ table user:
 
 table article:
     1,id  主键
-    2,rootid 主帖id
+    2,rootid 主帖人id 为0主贴，否则从贴
     3,title  标题
     4,content 内容
     5,userid  发帖人  外键
