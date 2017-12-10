@@ -11,11 +11,11 @@
                 <!-- 有 id就是回帖 -->
 
 
-                <input type="hidden" id="postrootaction" name="action" value="add" />
+                <input type="hidden" id="postrootaction" name="action" value="addz"/>
                 <input type="hidden" id="postrootid" name="rootid" value="" />
 
 
-                 <input type="hidden" name="userid" id="userid" value="" />
+                <input type="hidden" name="userid" id="userid" value="<#if user??>${user.userid}</#if>"/>
 
             </td>
         </tr>

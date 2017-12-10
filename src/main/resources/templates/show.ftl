@@ -84,6 +84,19 @@
         //* hide all elements & show preloader
         document.documentElement.className += 'js';
     </script>
+
+    <link rel="stylesheet" href="/editor/themes/default/default.css"/>
+    <script charset="utf-8" src="/editor/kindeditor-min.js"></script>
+    <script charset="utf-8" src="/editor/lang/zh_CN.js"></script>
+    <script type="text/javascript">
+        var editor;
+        KindEditor.ready(function (K) {
+            editor = K.create('textarea[name="content"]', {
+                allowFileManager: true
+            });
+
+        });
+    </script>
 </head>
 
 <body class="sidebar_hidden">
@@ -127,11 +140,13 @@
 
                             <b class="caret"></b></a>
                             <ul class="dropdown-menu">
+                            <#if !user??>
                                 <li><a data-toggle="modal" id="my"
                                        data-backdrop="static"
                                        href="#login" title="登录"
                                        onclick="javascript:document.getElementById('submenu').innerHTML='登录'">登录
                                 </a></li>
+                            </#if>
                                 <li><a data-toggle="modal" id="my" data-backdrop="static"
                                        href="#register" title="注册"
                                        onclick="javascript:document.getElementById('submenu').innerHTML='注册'">注册</a>
@@ -139,19 +154,21 @@
 
                                 </li>
 
+                            <#if user??>
+
+                                <li><a href="#post" title="灌水" data-toggle="modal"
+                                       id="myp" data-backdrop="static"
+                                       onclick="javascript:addz();document.getElementById('submenu').innerHTML='灌水'">灌水</a>
 
 
-                            <#--<li><a href="#post" title="灌水" data-toggle="modal"-->
-                            <#--id="myp" data-backdrop="static"-->
-                            <#--onclick="javascript:addz();document.getElementById('submenu').innerHTML='灌水'">灌水</a>-->
 
-
-
-                            <#--</li>-->
+                                <#--</li>-->
 
                                 <li class="divider"></li>
+
                                 <li><a href="user?action=logout"
                                        onclick="javascript:document.getElementById('submenu').innerHTML=''">退出当前用户</a></li>
+                            </#if>
                             </ul></li>
                     </ul>
 
@@ -368,29 +385,27 @@
 
     }
     //删除从贴
-    function del(id,rootid) {
+    function del(id, rootid, zid) {
 
         $.ajax({
             type: "post",
-            url: "ArticleControl",
-            data:"action=del&id="+id+"&rootid="+rootid,
+            url: "article",
+            data: "action=delc&rid=" + id + "&id=" + rootid,
             dataType: "text json",
             success : function(data){
 
 
                 //刷新从贴
-                showhuitie($("#postrootid").val(),$('#userid').val(),$('#userid').val(),data);
+                showhuitie($("#postrootid").val(), $('#userid').val(), zid, data);
             }
 
         });
     }
     //灌贴和回帖保存内容
     function add() {
-        //得到回帖内容数据
-        var txt=CKEDITOR.instances.content.getData();
-
-
-
+        ///得到回帖内容数据
+        // var txt=CKEDITOR.instances.content.getData();
+        var txt = editor.html();
         if ($('#title').val() =='') {
 
             document.getElementById("sticky_a6").click();
@@ -402,15 +417,12 @@
             document.getElementById("sticky_a7").click();
             return;
         }
-
-
         //获取textarea的值  ,赋值到hidden
-        $('#neirong').val(txt);
+        $('#content').val(txt);
 
         // document.all.addarticle.neirong.value=txt;
 
         if( $('#userid').val()==""){//没有登录
-
             document.getElementById("sticky_a8").click();
             return;
         }
@@ -418,8 +430,9 @@
         if($("#postrootaction").val()==='reply'){//回帖使用异步，否则不能定位到model
             $.ajax({
                 type: "post",
-                url: "ArticleControl",
-                data:"action=reply&title="+$('#title').val()+"&content="+txt+"&rootid="+$("#postrootid").val()+"&userid="+$('#userid').val(),
+                url: "article",
+                data: "action=reply&title=" + $('#title').val() + "&content=" + txt + "&rootid=" +
+                $("#postrootid").val() + "&userid=" + $('#userid').val() + "&id=" + $('#postrootid').val(),
                 dataType: "text json",
                 success : function(data){
                     //能回帖的肯定是同一用户，所以uid和duid相等
@@ -427,37 +440,37 @@
 
                     $('#rshow').modal('show');
                     $('#post').modal('hide');
-                    showhuitie($("#postrootid").val(),$('#userid').val(),$('#userid').val(),data);
+                    showhuitie($("#postrootid").val(), $('#userid').val(), $('#zid').val(), data);
                 }
 
             });
 
         }
         //发主贴
-        if($("#postrootaction").val()==='add'){//主帖
+
+        if ($("#postrootaction").val() === 'addz') {//主帖
             $('#addarticle').submit();
 
         }
 
 
-
     }
     //content为内容组件的名字
-    CKEDITOR.replace('content',{
-        filebrowserBrowseUrl : 'ckfinder/ckfinder.html',
-        filebrowserImageBrowseUrl : 'ckfinder/ckfinder.html?type=Images',
-        filebrowserFlashBrowseUrl : 'ckfinder/ckfinder.html?type=Flash',
-        filebrowserUploadUrl : 'ckfinder/core/connector/java/connector.java?command=QuickUpload&type=Files',
-        filebrowserImageUploadUrl : 'ckfinder/core/connector/java/connector.java?command=QuickUpload&type=Images',
-        filebrowserFlashUploadUrl : 'ckfinder/core/connector/java/connector.java?command=QuickUpload&type=Flash'
-    });
+    //    CKEDITOR.replace('content',{
+    //        filebrowserBrowseUrl : 'ckfinder/ckfinder.html',
+    //        filebrowserImageBrowseUrl : 'ckfinder/ckfinder.html?type=Images',
+    //        filebrowserFlashBrowseUrl : 'ckfinder/ckfinder.html?type=Flash',
+    //        filebrowserUploadUrl : 'ckfinder/core/connector/java/connector.java?command=QuickUpload&type=Files',
+    //        filebrowserImageUploadUrl : 'ckfinder/core/connector/java/connector.java?command=QuickUpload&type=Images',
+    //        filebrowserFlashUploadUrl : 'ckfinder/core/connector/java/connector.java?command=QuickUpload&type=Flash'
+    //    });
 
     //执行发主贴窗体
     function addz() {
 
         $("#postrootid").val(0);
         //发主帖标志
-        $('#postrootaction').val('add');
+        $('#postrootaction').val('addz');
 
     }
 
@@ -469,7 +482,8 @@
         $('#rshow').modal('hide');
         //清空title和content两个控件
         $('#title').val("");
-        CKEDITOR.instances.content.setData(' ');//清空内容框内容
+//        CKEDITOR.instances.content.setData(' ');//清空内容框内容
+        editor.html("")//清空内容框内容
         $('#post').modal('show');
 
     }
@@ -489,7 +503,7 @@
         var content="";
 
         var footer="";
-
+        console.log(data)
 
         $(data.list).each(function(i){
             //var info = comment.root;
@@ -501,15 +515,34 @@
 
             //增加删除重贴按钮,浏览用户和本帖用户相同的情况下，才能删除
 
-            if(uid===duid){//字符串是否相等,删除从贴
+            console.log("uid:" + uid + "本帖id：" + data.list[i].rootid + "主贴id：" + duid)
+
+            //duid 61 uid 3 rootid 10
+            if (uid == data.list[i].user.userid) {//字符串是否相等,删除从贴\
+                // console.log(uid+"--"+data.list[i].user.userid);
                 footer="<div id='foot"+i+"' > "+
                         "	<a class='btn btn-danger'  href='#' "+
-                        "onclick='javascript:del("+data.list[i].id+","+data.list[i].rootid+")'>删除 </a>"+
+                        "onclick='javascript:del(" + data.list[i].id + "," + data.list[i].rootid + "," + duid + ")'>删除 </a>" +
 
                         "</div> ";
 
-            }
+            } else {
+                //  console.log("发主贴的用户id:"+duid);
+                if (uid == duid) {//发主贴用户，也能删除
+                    footer = "<div id='foot" + i + "' > " +
+                            "	<a class='btn btn-danger'  href='#' " +
+                            "onclick='javascript:del(" + data.list[i].id + "," + data.list[i].rootid + "," + duid + ")'>删除 </a>" +
 
+                            "</div> ";
+
+                } else {
+                    footer = "<div id='foot" + i + "' > " +
+
+
+                            "</div> ";
+                }
+
+            }
 
             //增加帖子的标题，在tab上
             if(i == 0){
@@ -568,10 +601,10 @@
         $("#rshowid").val(id);
         //把该主帖子的id值付给post model下的隐藏字段，代表该贴是子贴
         $("#postrootid").val(id);
-
+        $("#zid").val(duid);
         $.ajax({
             type: "post",
-            url: "ArticleControl",
+            url: "article",
             data:"action=queryid&id="+id,
             dataType: "text json",
             success : function(data){

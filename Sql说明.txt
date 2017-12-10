@@ -15,3 +15,26 @@ table article:
     4,content 内容
     5,userid  发帖人  外键
     6,datetime  发帖时间
+
+procedure create:
+
+
+delimter //
+create procedure p_1(
+    in in_rid int ,
+   out out_title varchar(255)
+)
+
+begin
+ set @title := "";
+         select *
+         from article
+         where rootid = in_rid;
+
+         select title into @title
+         from article
+         where id = in_rid;
+         set out_title:=@title;
+
+end//
+delimter ;

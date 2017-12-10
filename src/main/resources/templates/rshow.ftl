@@ -30,20 +30,21 @@
 	<div class="modal-footer">
 
 
-
+	<#if !user??>
 			<a class="btn btn-warning" href="#login" title="登录" data-toggle="modal"
 				id="myr" data-backdrop="static" title="登录"
 				onclick="javascript:$('#rshow').modal('hide');document.getElementById('submenu').innerHTML='登录'">登录
 			</a>
 
-		
+	</#if>
 	
 			<input type="hidden" id="rshowid" value="" name="rshowid"/>
-			
-			
+
+	<#if user??>
 			<a class="btn btn-info" href="" title="回灌" data-toggle="modal"
 				id="myr" data-backdrop="static"
 				onclick="javascript:addc();document.getElementById('submenu').innerHTML='回灌'">回灌 </a>
+	</#if>
 	</div>
 </div>
 

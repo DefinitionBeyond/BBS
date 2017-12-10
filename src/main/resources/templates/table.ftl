@@ -83,10 +83,14 @@
 												 <#--<i class="icon-eye-open"></i>-->
 											<#---->
 									<#--</a>-->
-
+										<#assign uid = -1 />
+										<#if user??>
+											<#assign uid = user.userid/>
+										</#if>
+									<#--console.log(${d.user.userid}+"--"+${d.id})-->
                                         <a href="#rshow" title="灌水" data-toggle="modal"
                                            id="myp" data-backdrop="static"
-                                           onclick="">
+                                           onclick="rshow( ${d.id},${uid},${d.user.userid})//rshow()">
                                             <i class="icon-eye-open"></i>
 
                                         </a>
@@ -94,10 +98,7 @@
 											
 										
 											<!-- 是本人贴可以删除和修改 -->
-										<#assign uid = -1 />
-										<#if user??>
-											<#assign uid = d.user.userid/>
-										</#if>
+
 										<#if user??>
 											<#if user.userid==d.user.userid>
 											<a

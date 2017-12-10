@@ -31,4 +31,26 @@ public interface articleDao extends CrudRepository<Article, Integer> {
     @Modifying
     @Query("delete from Article a where a.id =:id or a.rootid = :id")
     int deleteZT(@Param("id") int id);
+
+
+    /**
+     * 像数据库中插入数据
+     *
+     * @param article
+     * @return
+     */
+    @Override
+    Article save(Article article);
+
+
+    /**
+     * 根据丛贴的id删除从贴
+     *
+     * @param id
+     * @return
+     */
+    @Modifying
+    @Query("delete  from Article where id =:id")
+    int deleteCT(@Param("id") Integer id);
+
 }

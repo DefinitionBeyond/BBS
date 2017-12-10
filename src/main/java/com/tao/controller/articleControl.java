@@ -1,5 +1,6 @@
 package com.tao.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.tao.po.Article;
 import com.tao.po.PageBean;
 import com.tao.po.User1;
@@ -20,6 +21,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,11 +62,82 @@ public class articleControl extends HttpServlet {
             case "delz": //删除主贴
                 delTZ(req, resp);
                 break;
-
+            case "addz": // 发布主贴
+                add(req, resp);
+                break;
+            case "queryid": //查看主贴下的从贴
+                queryReply(req, resp);
+                break;
+            case "delc":
+                delCT(req, resp);//删除从贴
+                break;
+            case "reply"://回帖
+                add(req, resp);
+                break;
         }
 
         map1.put("user", req.getSession().getAttribute("user"));//put user 的session信息
         freemarkUtil.forward(map.get("success").toString(), map1, resp);//将session在页面中传递，保证用户的权限
+    }
+
+    private void delCT(HttpServletRequest req, HttpServletResponse resp) {
+        String id = req.getParameter("rid");
+
+        service.deleteCT(Integer.parseInt(id));
+
+        queryReply(req, resp);
+    }
+
+    private void queryReply(HttpServletRequest req, HttpServletResponse resp) {
+        String id = req.getParameter("id");
+        Map<String, Object> map = service.queryById(Integer.parseInt(id));
+
+        String s = JSON.toJSONString(map, true); //把查询结果转成json格式
+        System.out.print(s);
+        resp.setContentType("text/html");
+        resp.setCharacterEncoding("utf-8");
+        try {
+            PrintWriter out = resp.getWriter();
+            out.print(s); //传入前端页面
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void add(HttpServletRequest req, HttpServletResponse resp) {
+        String title = req.getParameter("title");
+
+        String content = req.getParameter("content");
+        String rootid = req.getParameter("rootid");
+
+        String userid = req.getParameter("userid");
+
+        Article article = new Article();
+
+        article.setRootid(Integer.parseInt(rootid));
+
+        article.setContent(content);
+
+        article.setTitle(title);
+        User1 user = new User1();
+        user.setUserid(Integer.parseInt(userid));
+        article.setUser(user);
+        article.setDatatime(new Date(System.currentTimeMillis()));
+        if (service.save(article) != null) {
+            if (rootid.equals("0")) {
+                RequestDispatcher dispatcher = null;
+                try {
+                    dispatcher = req.getRequestDispatcher("index");
+                    dispatcher.forward(req, resp);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                this.queryReply(req, resp);
+            }
+        }
     }
 
     private void delTZ(HttpServletRequest req, HttpServletResponse resp) {
