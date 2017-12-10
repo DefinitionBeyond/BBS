@@ -47,7 +47,7 @@ public class userServiceImpl {
      * 对用户注册时的头像文件做解析，并且存入图片服务器，在数据库中做记录保留
      *
      * @param request
-     * @param commonsMultipartResolver
+     * @param commonsMultipartResolver 通用的多部分解析器
      * @return
      */
     public User1 upLoadPic(HttpServletRequest request, CommonsMultipartResolver commonsMultipartResolver) {

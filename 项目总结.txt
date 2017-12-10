@@ -1,0 +1,34 @@
+1，刚开始起步的时候，进入首页就是一直是404错误，自己获取freemarker的模板，与页面转向写好，没有问题。
+        但是这个bug一直没有消除，后来发现，在解释的过程中static下的页面被spring invokeHlander拦截了，
+        就配置了防止静态页被拦截。(见config包)
+
+2，在注册的时候，刚开始操作对象就一个，但是上传头像这一块，基于http协议的传输遇到一定的问题，
+        commonsMultipartResolver 通用的多部分解析器，
+        CommonsMultipartResolver是基于Apache的Commons FileUpload来实现文件上传功能的
+        才解决了文件上传问题，文件，图片采用的是流式数据的传输，采用相关流的数据处理就好了。
+        由于注册功能并不和其它操作一样，其它ajax或者超链，传过来的都是非流式数据。
+        所以的把注册的操作单独判定
+
+3，在做分页的时候，遇到一个问题，也没有得到解决：就是数据库的一个字段默认为每页显示5页，但是采用的自动默认值
+        就没有成功过，不得已手动重新设置该数值
+
+3，刚开始每个页面都得设置字符集，响应数据类型。自己就查阅资料，写了一个对字符编码的过滤器(见filter包和项目入口)
+
+4,在文本编辑器上面，刚开始选择CKeditor 在解析编译路径问题自己没有能够很好解决，
+    后来选择了editor，查询资料，看了一些源码，发现改两个地方就可以正确使用。(见kindControl注释)
+
+5.spring data  jpa 参数为对象是写法的不同，国内博客是真的没有查到，在spring 官网 对spring data jpa 的解释文档
+        明白了hibernate 有spingdata jpa实现的时候，参数为对象的格式(见userDao)
+
+6.也是spring data jpa 不支持实现存储结构，必须使用hibernate的原生jpa，必须加一个实体属性，和一个Repository注解，spring才能将bean装载
+
+7.存储过程得出的结果map，结果做成json格式，采用了阿里的fastjson
+
+8.认为执行一个事务就开通一个线程连接数据库，浪费资源，而且比较麻烦，就创建了一个数据库连接池，采用的是阿里的Druid连接池插件
+
+这次项目可以写的过程中比较复杂。但是锻炼了自己，让平时学的一些能够灵活运用。
+spring + hibernate + annontion + springdata + springboot + freemarker + servlet + json + ajax + js + maven dependency
+使用了这一系列的知识点，让自己知道写代码不是一路顺利的，bug时时都存在，要做的是冷静下来调试解决。
+每次出的 bug 有印象，下次遇到，就能加速解决，调试的过程也是很重要的
+敢于尝试新的知识，才可以让技术得到进步
+
