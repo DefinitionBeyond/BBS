@@ -53,8 +53,8 @@
 									<div class="controls">
 										<div class="alert alert-info">
 											<label for="u_fname" class="control-label">注册账号</label> <input
-												type="text" id="u_fname" name="reusername"
-												class="input-xlarge" value="Kun Wei" /> <strong>账号*</strong>
+                                                type="text" id="u_fname" name="reusername"
+                                                class="input-xlarge" value="最大长度不超过11位"/> <strong>账号*</strong>
 											请认真填写！
 										</div>
 
